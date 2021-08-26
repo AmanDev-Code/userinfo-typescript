@@ -33,12 +33,11 @@ const users: UsersModel = {
     const userDetailsOnFind = state.items.find(val => val.userId === payload.userId);
     if(userDetailsOnFind?.userId === payload.userId)
     {
-      state.userDetails.userId = userDetailsOnFind.userId;
+      state.userDetails.userId = userDetailsOnFind.userId
       state.userDetails.userName = userDetailsOnFind.userName;
       state.userDetails.userEmail = userDetailsOnFind.userEmail;
       state.userDetails.userAge = userDetailsOnFind.userAge;
     }
-    else window.confirm(`\nSorry Id: ${payload.userId} does not exist`);
   }),
 };
 

@@ -114,9 +114,9 @@ const Enquiry: FC = () => {
 
     const classes = useStyles();
 
-    const createUser = useStoreActions(store => store.users.createUser);
-    const removeUser = useStoreActions(store => store.users.removeUser);
-    const updateUser = useStoreActions(store => store.users.updateUser);
+    const createUser = useStoreActions((store) => store.users.createUser);
+    const removeUser = useStoreActions((store) => store.users.removeUser);
+    const updateUser = useStoreActions((store) => store.users.updateUser);
 
 
     const [name, setName] = useState<string>("");
@@ -125,7 +125,7 @@ const Enquiry: FC = () => {
     const [toggleButton, setToggleButton] = useState(false);
     const [iseditItems, setIsEditItem] = useState<Idata | any>([]);
 
-    const userdata = useStoreState(store => store.users.items);
+    const userdata = useStoreState((store) => store.users.items);
 
     const onSubmits = (): void => {
         if ((!name) || (!email) || (!age)) {
