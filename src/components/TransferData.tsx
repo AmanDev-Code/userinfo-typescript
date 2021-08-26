@@ -15,8 +15,8 @@ const TransferData = () => {
             <div className="showItems" >
                 <div className='eachItem'>
                     <h1>Name: {userdetails.userName}</h1>
-                    <h1>Name: {userdetails.userEmail}</h1>
-                    <h1>Name: {userdetails.userAge}</h1>
+                    <h1>Email: {userdetails.userEmail}</h1>
+                    <h1>Age: {userdetails.userAge}</h1>
                 </div>
             </div>
         </>
