@@ -1,7 +1,7 @@
 
 
 export default interface Idata{
-    userId: string;
+    userId: String;
     userName: string ;
     userEmail: string;
     userAge: number;

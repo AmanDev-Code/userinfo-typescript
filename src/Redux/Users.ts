@@ -25,9 +25,14 @@ const users: UsersModel = {
     state.items = state.items.filter((user) => user.userId !== payload);
   }),
   updateUser: action((state, payload) => {
-    state.items.findIndex((user) => {
-      return user.userId = payload.userId
+    const userUpdateIndex = state.items.findIndex((user) => {
+      return user.userId === payload.userId
     });
+      if(userUpdateIndex !== undefined){
+        state.items[userUpdateIndex].userName = payload.userName
+        state.items[userUpdateIndex].userEmail = payload.userEmail
+        state.items[userUpdateIndex].userAge = payload.userAge
+      }
   }),
   setUserInfo: action((state, payload) => {
     const userDetailsOnFind = state.items.find(val => val.userId === payload.userId);

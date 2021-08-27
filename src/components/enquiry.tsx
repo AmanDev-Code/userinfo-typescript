@@ -1,4 +1,4 @@
-import React, { useState, FC, ChangeEvent} from 'react'
+import React, { useState, FC, ChangeEvent, useEffect } from 'react'
 import "./style.css";
 import Displayuser from './Displayuser';
 import {
@@ -118,36 +118,16 @@ const Enquiry: FC = () => {
     const removeUser = useStoreActions((store) => store.users.removeUser);
     const updateUser = useStoreActions((store) => store.users.updateUser);
 
-
+    const [Id, setId] = useState<String>("");
     const [name, setName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
-    const [age, setAge] = useState<number | string>();
+    const [age, setAge] = useState<number | string>(0);
     const [toggleButton, setToggleButton] = useState(false);
     const [iseditItems, setIsEditItem] = useState<Idata | any>([]);
 
     const userdata = useStoreState((store) => store.users.items);
 
-    const onSubmits = (): void => {
-        if ((!name) || (!email) || (!age)) {
-            alert("Please fill the data")
-        } else if ((toggleButton)) {
-            userdata.map((userIndex) => {
-                if (userIndex.userId === iseditItems) {
-                    return createUser({ userId: String(Number(Math.random().toString().slice(2, 11))), userName: name, userEmail: email, userAge: Number(age) })
-                }
-                return userIndex;
-            });
-            updateUser(iseditItems)
-            setToggleButton(false);
-        } else {
-            createUser({ userId: String(Number(Math.random().toString().slice(2, 11))), userName: name, userEmail: email, userAge: Number(age) });
-            setName("");
-            setEmail("");
-            setAge("");
-        }
-
-
-    }
+   
 
 
     const inputEventName = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -160,29 +140,58 @@ const Enquiry: FC = () => {
         }
     };
 
-    const preventReload = (event: React.MouseEvent<HTMLFormElement>) => {
-        event.preventDefault();
-    }
 
     // edit the current data card
-    const editItems = (userid: number) => {
+    const editItems = (userid: String) => {
         const items_card_search_id: any = userdata.find((val) => {
-            return val.userId === String(userid);
+
+            if (val.userId === userid) {
+                setId(userid)
+                setIsEditItem(String(Id))
+                console.log(iseditItems)
+                setToggleButton(true);
+                return val;
+                
+            }
+            return null
         });
+        setIsEditItem(items_card_search_id.userId)
+        console.log(items_card_search_id)
+        console.log(iseditItems)
         setName(items_card_search_id?.userName);
         setEmail(items_card_search_id?.userEmail);
         setAge(items_card_search_id?.userAge);
-        setIsEditItem({ userName: name, userEmail: email, userAge: age });
-        setToggleButton(true);
-
+        
+        
     }
+
 
     // delete Item in card
     const deleteItem = async (id: number, name: string) => {
         const isConfirmed = window.confirm(`Deleting a User \nid: ${id} \nName: ${name} \ncan't be restored?`);
         if (!isConfirmed) return;
+        removeUser(String(id));
+    }
 
-        removeUser(id);
+    const onSubmits = (event: React.MouseEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if ((!name) || (!email) || (!age)) {
+            alert("Please fill the data")
+        } else if ((name) && (email) && (age) && (toggleButton)) {
+            console.log(iseditItems)
+            updateUser({ userId: iseditItems, userName: name, userEmail: email, userAge: Number(age) })
+            setName("");
+            setEmail("");
+            setAge("");
+            setToggleButton(false);
+        } else {
+            createUser({ userId: String(Number(Math.random().toString().slice(2, 11))), userName: name, userEmail: email, userAge: Number(age) });
+            setName("");
+            setEmail("");
+            setAge("");
+        }
+
+
     }
 
     //redering the JSX and displaying the core results
@@ -191,7 +200,7 @@ const Enquiry: FC = () => {
             <div className="main-div">
                 <div className="htmlform">
                     <div className="addItems">
-                        <form className="additemform" onSubmit={preventReload}>
+                        <form className="additemform" onSubmit={onSubmits}>
 
                             <label>
                                 <input type="text" placeholder="enter your name" value={name} name="name" onChange={inputEventName} autoFocus /><br />
@@ -199,7 +208,7 @@ const Enquiry: FC = () => {
                                 <input type="text" placeholder="email" value={email} name="email" onChange={inputEventName} autoFocus /><br />
 
                                 <input type="number" placeholder="age" value={age} name="age" onChange={inputEventName} autoFocus /><br />
-                                {toggleButton ? <UpdateButton className={classes.sub} endIcon={<CloudCircleRounded />} onClick={onSubmits} > Update</UpdateButton> : <SubmitButton variant="contained" className={classes.sub} color="secondary" endIcon={<Icon>send</Icon>} onClick={onSubmits} >Submit</SubmitButton>}
+                                {toggleButton ? <UpdateButton type="submit" className={classes.sub} endIcon={<CloudCircleRounded />}> Update</UpdateButton> : <SubmitButton type="submit" variant="contained" className={classes.sub} color="secondary" endIcon={<Icon>send</Icon>}>Submit</SubmitButton>}
                             </label>
 
                         </form>
@@ -210,7 +219,7 @@ const Enquiry: FC = () => {
                         {userdata.map((data: any, key: number) => {
                             return (
                                 <>
-                                    <Displayuser key={key} data={data} deleteItem={deleteItem} editItems={editItems}/>
+                                    <Displayuser key={key} data={data} deleteItem={deleteItem} editItems={editItems} />
 
                                 </>
                             )
